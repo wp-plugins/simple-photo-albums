@@ -11,7 +11,7 @@
  * Plugin Name: Simple Photo Albums
  * Plugin URI: http://wordpress.org/plugins/simple-photo-albums/
  * Description: A shortcode for creating photo albums from a group of galleries.
- * Version: 1.0.3
+ * Version: 1.1.0
  * Author: AudioTheme
  * Author URI: http://audiotheme.com/
  * License: GPL-2.0+
@@ -129,6 +129,7 @@ class Sphoa {
 
 		// Load default gallery scripts.
 		include( plugin_dir_path( __FILE__ ) . 'includes/jetpack-carousel.php' );
+		include( plugin_dir_path( __FILE__ ) . 'includes/magnific-popup.php' );
 		include( plugin_dir_path( __FILE__ ) . 'includes/swipebox.php' );
 
 		if ( is_admin() ) {
@@ -145,9 +146,7 @@ class Sphoa {
 	 * @since 1.0.0
 	 */
 	public function load_textdomain() {
-		$locale = apply_filters( 'plugin_locale', get_locale(), 'simple-photo-albums' );
-		load_textdomain( 'simple-photo-albums', WP_LANG_DIR . '/simple-photo-albums/' . $locale . '.mo' );
-		load_plugin_textdomain( 'simple-photo-albums', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+		load_plugin_textdomain( 'simple-photo-albums', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 	}
 
 	/**
