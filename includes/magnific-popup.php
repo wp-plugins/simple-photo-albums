@@ -4,13 +4,13 @@
  *
  * @package SimplePhotoAlbums\GalleryScript
  * @author Brady Vercher <brady@audiotheme.com>
- * @copyright Copyright (c) 2013, AudioTheme, LLC
+ * @copyright Copyright (c) 2014, AudioTheme, LLC
  * @license GPL-2.0+
  *
  * @wordpress-plugin
- * Plugin Name: Simple Photo Albums (Swipebox)
+ * Plugin Name: Simple Photo Albums (Magnific Popup)
  * Plugin URI: http://wordpress.org/plugins/simple-photo-albums/
- * Description: Swipebox support for Simple Photo Albums.
+ * Description: Magnific Popup support for Simple Photo Albums.
  * Version: 1.0.0
  * Author: AudioTheme
  * Author URI: http://audiotheme.com/
@@ -19,7 +19,7 @@
  */
 
 /**
- * Swipebox support for Simple Photo Albums.
+ * Magnific Popup support for Simple Photo Albums.
  *
  * Demonstrates how to extend the main plugin to integrate support for a
  * third-party gallery script.
@@ -28,9 +28,9 @@
  * @author Brady Vercher <brady@audiotheme.com>
  * @since 1.0.0
  */
-class Sphoa_GalleryScript_Swipebox {
+class Sphoa_GalleryScript_MagnificPopup {
 	/**
-	 * Load Swipebox extension.
+	 * Load Magnific Popup extension.
 	 *
 	 * @since 1.0.0
 	 */
@@ -39,7 +39,7 @@ class Sphoa_GalleryScript_Swipebox {
 
 		// Don't register if the this isn't the active script.
 		$settings = sphoa()->get_settings();
-		if ( 'swipebox' != $settings['gallery_script'] ) {
+		if ( 'magnific-popup' != $settings['gallery_script'] ) {
 			return;
 		}
 
@@ -48,7 +48,7 @@ class Sphoa_GalleryScript_Swipebox {
 	}
 
 	/**
-	 * Register the Swipebox gallery script.
+	 * Register the Magnific Popup gallery script.
 	 *
 	 * @since 1.0.0
 	 *
@@ -56,7 +56,7 @@ class Sphoa_GalleryScript_Swipebox {
 	 * @return array
 	 */
 	public static function register_addon( $scripts ) {
-		$scripts['swipebox'] = __( 'Swipebox', 'simple-photo-albums' );
+		$scripts['magnific-popup'] = __( 'Magnific Popup', 'simple-photo-albums' );
 		return $scripts;
 	}
 
@@ -66,12 +66,12 @@ class Sphoa_GalleryScript_Swipebox {
 	 * @since 1.0.0
 	 */
 	public static function register_assets() {
-		wp_enqueue_script( 'simple-photo-albums-swipebox', plugin_dir_url( __FILE__ ) . 'libraries/swipebox/jquery.swipebox.min.js', array( 'jquery' ), '1.2.1', true );
-		wp_enqueue_style( 'simple-photo-albums-swipebox', plugin_dir_url( __FILE__ ) . 'libraries/swipebox/swipebox.css' );
+		wp_enqueue_script( 'simple-photo-albums-magnific-popup', plugin_dir_url( __FILE__ ) . 'libraries/magnific-popup/jquery.magnific-popup.js', array( 'jquery' ), '0.9.9', true );
+		wp_enqueue_style( 'simple-photo-albums-magnific-popup', plugin_dir_url( __FILE__ ) . 'libraries/magnific-popup/magnific-popup.css' );
 	}
 
 	/**
-	 * Print scripts for integrating albums with Swipebox.
+	 * Print scripts for integrating albums with Magnific Popup.
 	 *
 	 * @since 1.0.0
 	 */
@@ -83,7 +83,7 @@ class Sphoa_GalleryScript_Swipebox {
 				$attachment = get_post( $id );
 
 				$data[ 'album-' . $gallery_id ][] = array(
-					'href'  => wp_get_attachment_url( $id ),
+					'src'   => wp_get_attachment_url( $id ),
 					'title' => wptexturize( $attachment->post_excerpt ),
 				);
 			}
@@ -97,17 +97,24 @@ class Sphoa_GalleryScript_Swipebox {
 		echo "</script>\n";
 		?>
 		<script type="text/javascript">
-		jQuery(function($) {
+		jQuery(function( $ ) {
 			// Try to remove existing handlers.
-			$('.simple-photo-albums .gallery a').off('click').removeClass('cboxElement');
+			$( '.simple-photo-albums .gallery a' ).off( 'click' ).removeClass( 'cboxElement' );
 
-			$('.gallery').on('click', 'a[data-album-id]', function(e) {
+			$( '.gallery' ).on( 'click', 'a[data-album-id]', function( e ) {
 				e.preventDefault();
-				$.swipebox( simplePhotoAlbums[ $(this).data('album-id') ] );
+
+				$.magnificPopup.open({
+					items: simplePhotoAlbums[ $( this ).data( 'album-id' ) ],
+					gallery: {
+						enabled: true
+					},
+					type: 'image'
+				});
 			});
 		});
 		</script>
 		<?php
 	}
 }
-add_action( 'plugins_loaded', array( 'Sphoa_GalleryScript_Swipebox', 'load' ) );
+add_action( 'plugins_loaded', array( 'Sphoa_GalleryScript_MagnificPopup', 'load' ) );
